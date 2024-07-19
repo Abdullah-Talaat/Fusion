@@ -169,12 +169,13 @@ function delet(r) {
   display:none;
   `
 }
-let numsMenuo = [num1,num2,num3,num4,num5,num6,num7,num8]
 // nav 
  function nav(num1,num2,num3,num4,num5,num6,num7,num8) {
-  for(let i = 0; i < numsMenuo.length ;i++){
+   let num;
+  for(let i = 0; i < 8 + 1 ;i++){
+    num = "num" + i;
     if(i == 1){
-      numsMenuo[0].style = `
+      num.style = `
         font-size: 30px;
         color: #777;
         margin-left: 10px;
@@ -184,7 +185,7 @@ let numsMenuo = [num1,num2,num3,num4,num5,num6,num7,num8]
   `;
     }
     else {
-      numsMenuo[8].style = `
+      num.style = `
         font-size: 30px;
         padding: 22.4px 30px;
         color: #777;
@@ -192,13 +193,14 @@ let numsMenuo = [num1,num2,num3,num4,num5,num6,num7,num8]
     }
   }
 }
-let eArr = [e2,e3,e4];
 function disNav(e1,e2,e3,e4) {
+  let e;
   e1.style = `
   margin-top :76.6px;
   `
-  for(let i = 0; i < eArr.length ; i++){
-    eArr[i].style = `
+  for(let i = 1; i < 4 ; i++){
+    e = "e" + i;  
+    e.style = `
       display:none;
   `;
   }
@@ -564,12 +566,11 @@ window.onload = function() {
 };
 
 n11();
-let lodingScreanLet = document.querySelector('.load-screan-Api');
-function lodingSean(bool) {
-  if(bool == true){
+let lodingScreanLet = document.querySelector('#lA');
+function lodingSean(show) {
+  if(show && lodingScreanLet){
     lodingScreanLet.style.display = "flex";
-  }
-  else {
+  } else if (!show) {
     lodingScreanLet.style.display = "none";
   }
 }
@@ -712,7 +713,7 @@ function login() {
      }
    }
    if (userLogin == true) {
-     //alertt("You are logged in","#31FF4B")
+     
      showApp()
    }
  }
@@ -776,7 +777,15 @@ function loginWithPage(i) {
 if (users.length == 1) {
   loginWithPage(0)
 }
-
+function logOut() {
+  document.querySelector(".login").style = `display:flex `;
+  document.querySelector(".navbar").style= `display:none `;
+  
+  clearInluts();
+  if (users.length < 1) {
+   showPages();
+ }
+}
 // تكوين Firebase
 
 const firebaseConfig = {
@@ -811,7 +820,7 @@ uploadbtn.onclick = async function() {
       date: date,
       coments: [],
     };
-lodingSean(true);
+     lodingSean(true);
     try {
       lodingSean(false);
       const docRef = await addDoc(collection(db, "posts"), newPost);
@@ -822,6 +831,7 @@ lodingSean(true);
       lodingSean(false);
       alertt("Error adding document: "+ error,"red");
     }
+
   } else {
     alert("Element with id 'narInp' not found or input value is empty.");
   }
@@ -829,6 +839,7 @@ lodingSean(true);
 
 let sendComentBtn = document.getElementById('sendComentBtn');
 sendComentBtn.onclick = function() {
+  
   if (sendComent.value.trim() !== "") {
     let dateComent = new Date();
     let dateComentNow = dateComent.getFullYear() + "/" + (dateComent.getMonth() + 1) + "/" + dateComent.getDate();
@@ -840,6 +851,7 @@ sendComentBtn.onclick = function() {
 
     if (postIndex >= 0 && posts[postIndex]) {
       posts[postIndex].coments.push(newComent);
+
       lodingSean(true);
       updateDoc(doc(db, "posts", posts[postIndex].id), { coments: posts[postIndex].coments })
         .then(() => {
@@ -855,9 +867,12 @@ sendComentBtn.onclick = function() {
     } else {
       alert("No post selected for comment");
     }
-  } else {
+  } 
+  else {
     alert("Comment is empty");
   }
+    
+  
 };
 
 function showComent() {
@@ -915,7 +930,9 @@ function fetchPosts() {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
+if (app && analytics && db) {
   fetchPosts();
+}
 });
 
 function showPost(posts) {
